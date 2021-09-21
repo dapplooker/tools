@@ -1,0 +1,26 @@
+div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 10vh;
+}
+
+.EthereumBtn {
+  margin-top: 10px;
+  padding: 32px;
+  background-color: #3F0071;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: x-large;
+}
+
+.EthereumBtn:hover {
+  background-color: #610094;
+  cursor: pointer;
+}
+
+.information {
+  display: block;
+  text-align: center;
+}
