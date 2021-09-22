@@ -45,7 +45,6 @@ describe('Inbox', () => {
   })
 })
 
-https://rinkeby.infura.io/v3/56a52d6303a444de9e52da863d37d85f
 
 
 
