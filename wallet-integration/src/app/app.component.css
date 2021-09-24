@@ -1,0 +1,16 @@
+div {
+  text-align: center;
+}
+
+button {
+  padding: 15px;
+  border: none;
+  background-color: blue;
+  color: white;
+  font-size: large;
+}
+
+button:hover {
+  background-color: rgb(97, 97, 250);
+  cursor: pointer;
+}
