@@ -1,0 +1,75 @@
+
+<div class="container">
+
+<div class="wallet-connect">
+  <h1 *ngIf = "!state.connected">
+     Connect you Wallets with web3Modal
+  </h1>
+  <header *ngIf = "state.connected" class="header">
+    <div>
+      <p class = "data">Connected to</p>
+      <p>{{connectedChain && connectedChain.name}}</p>
+    </div>
+    <div>
+      <p class="data">Wallet Address</p>
+      <p>{{state.address}}</p>
+    </div>
+    
+  </header>
+  <button *ngIf = "!state.connected" class ="connect" (click) = "onConnect()">
+    Connect Wallet
+  </button>
+  <button *ngIf = "state.connected" class ="disconnect" (click)="resetApp()">
+    Disconnect
+  </button>
+
+  <div class ="wallet-data">
+
+    <div *ngIf="state.fetching">
+    <h3>Loading Data ....</h3>
+    </div>
+    <div *ngIf = "!state.fetching">
+     <div *ngIf="(!!state.assets && !!state.assets.length)" class="assets">
+       <div class="actions">
+         <h1>Actions</h1>
+         <button>
+          eth.sendTransaction()
+         </button>
+         <button>
+          eth.sign()
+        </button>
+        <button>
+          personal.sign()
+        </button>
+        <button>
+          dai.balanceOf()
+        </button>
+        <button>
+          dai.transfer()
+        </button>
+        <h1>Balance</h1>
+       </div>
+       <div class="balance">
+        <div class="symbol">
+          <img src ="./../assets/svg/eth.svg" atl="ethereum logo"/>
+         <p>{{nativeCurrency.name}}
+        </div>
+        <div>
+         <p>{{nativeCurrency.balance}} {{nativeCurrency.symbol}}</p>
+        </div>
+
+       </div>
+
+     </div>
+     <div *ngIf="state.connected && !(!!state.assets && !!state.assets.length)">
+    Nothing
+    </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+</div>
