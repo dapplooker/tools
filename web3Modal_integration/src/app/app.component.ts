@@ -46,8 +46,8 @@ interface IChainData {
 
 
 function initWeb3(provider: any){
-  const web3: any = new Web3(provider);
-
+  const web3: any = new Web3("http://localhost:33391/");
+ console.log(web3);
   web3.eth.extend({
     methods: [
       {
@@ -57,7 +57,7 @@ function initWeb3(provider: any){
       }
     ]
   });
-
+  console.log("web");
   return web3;
 }
 
@@ -361,11 +361,12 @@ export class AppComponent implements OnInit{
   
   //for creating the web3Modal when page loads
   constructor(private _http:AssetsService){
+    console.log("constructor working")
     this.web3Modal = new Web3Modal({
       network: this.getNetwork(),//optional
       cacheProvider: true,
       theme:"dark",
-      providerOptions: this.getProviderOptions()
+      providerOptions: {}
     });
     //cachedprovider is undefined in the beginning
     //getting ready the web3Modal object
@@ -374,6 +375,7 @@ export class AppComponent implements OnInit{
 
 
   ngOnInit():void{
+    console.log("ngOnInit")
     if (this.web3Modal.cachedProvider) {
       this.onConnect();
     }
@@ -422,7 +424,7 @@ export class AppComponent implements OnInit{
         },
         (error)=>{
         //  console.log(error);
-           this.state = { ...this.state,fetching:false };
+           this.state = { ...this.state,fetching:false, assets:[] };
         }
       );
 
@@ -443,15 +445,25 @@ export class AppComponent implements OnInit{
     provider.on("chainChanged", async (chainId: number) => {
       const { web3 } = this.state;
       const networkId = await web3.eth.net.getId();
-      this.state = { ...this.state,chainId, networkId }
-      await this.getAccountAssets();
+
+      if(networkId != 42220){
+        this.state = { ...this.state,chainId, networkId }
+        await this.getAccountAssets();
+      }
+      else {
+        alert(`Celo with chainID - ${chainId} is not supported`)
+      }
+
     });
 
     provider.on("networkChanged", async (networkId: number) => {
       const { web3 } = this.state;
       const chainId = await web3.eth.chainId();
-      this.state = { ...this.state,chainId, networkId }
-      await this.getAccountAssets();
+      if(networkId != 42220){
+        this.state = { ...this.state,chainId, networkId }
+        await this.getAccountAssets();
+      }
+
     });
   };
 
@@ -463,26 +475,26 @@ export class AppComponent implements OnInit{
     */
     const provider = await this.web3Modal.connect();
     // web3Modal.cachedProvider for metamak --> injected
-
     //to keep track of the provider changes (e.g - wallet changes)
     await this.subscribeProvider(provider);
-
+      
     //enabling the provider service
     await provider.enable();
     const web3: any = initWeb3(provider);
-    console.log(this.web3Modal);
-    console.log(web3);
+    //console.log(this.web3Modal);
 
     const accounts = await web3.eth.getAccounts();
     console.log(accounts);
     const address = accounts[0];
-
+    
     const networkId = await web3.eth.net.getId();
+    console.log(networkId)
 
     const chainId = await web3.eth.chainId();
+    console.log(chainId);
 
     this.connectedChain = chainId ? this.getChainData(chainId) : null;
-    //console.log(this.connectedChain);
+    console.log(this.connectedChain);
     
     this.state = { ...this.state,
       web3,
@@ -493,6 +505,7 @@ export class AppComponent implements OnInit{
       networkId}
 
     await this.getAccountAssets();
+    console.log("connected")
   };
   getChainData(chainId: number): IChainData {
     const chainData = this.supportedChains.filter(
@@ -503,7 +516,7 @@ export class AppComponent implements OnInit{
       throw new Error("ChainId missing or not supported");
     }
   
-    const API_KEY = "https://mainnet.infura.io/v3/e66dcbee71f043efa8085d676c87a389";
+    const API_KEY = "e66dcbee71f043efa8085d676c87a389";
   
     if (
       chainData.rpc_url.includes("infura.io") &&
@@ -526,7 +539,7 @@ export class AppComponent implements OnInit{
   }
 
   getProviderOptions(){
-    const infuraId = "https://mainnet.infura.io/v3/e66dcbee71f043efa8085d676c87a389";
+    const infuraId = "e66dcbee71f043efa8085d676c87a389";
     const providerOptions = {
       walletconnect: {
         package: WalletConnect,
@@ -534,9 +547,9 @@ export class AppComponent implements OnInit{
           infuraId
         }
       },
-      torus: {
-        package: Torus
-      },
+      // torus: {
+      //   package: Torus
+      // },
       // walletlink: {
       //   package: WalletLink,
       //   options: {
