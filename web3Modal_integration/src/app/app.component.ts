@@ -46,7 +46,7 @@ interface IChainData {
 
 
 function initWeb3(provider: any){
-  const web3: any = new Web3("http://localhost:33391/");
+  const web3: any = new Web3(provider);
  console.log(web3);
   web3.eth.extend({
     methods: [
